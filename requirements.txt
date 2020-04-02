@@ -1,0 +1,10 @@
+torch
+sklearn
+numpy
+tqdm
+gitpython
+datetime
+hashlib
+yagmail
+torchvision
+opencv-python
