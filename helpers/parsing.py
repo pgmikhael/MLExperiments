@@ -12,6 +12,12 @@ POSS_VAL_NOT_LIST = 'Flag {} has an invalid list of values: {}. Length of list m
 def parse_args():
      parser = argparse.ArgumentParser(description='IG Predictor')
 
+     # Experiment args
+     parser.add_argument('--init_temperature', type = float, default = 1)
+     parser.add_argument('--temperature_lr', type = float, default = 1e-3)
+     parser.add_argument('--scale_biases', action = 'store_true', default = False)
+
+
      # Dataset
      ## Development
      parser.add_argument('--dataset', type = str, default = 'regression')

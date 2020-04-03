@@ -35,6 +35,7 @@ def epoch_pass(data_loader, model, optimizer, crit, mode, args):
 
 
     #i = 0
+    temperature = args.init_temperature
     with tqdm(data_loader, total = len(data_loader), ncols = 60) as tqdm_bar:#total=args.num_batches_per_epoch)
         for batch in data_loader:
             x, y, batch = prepare_batch(batch, args)
@@ -54,6 +55,16 @@ def epoch_pass(data_loader, model, optimizer, crit, mode, args):
                 optimizer.step()      
                 optimizer.zero_grad() 
 
+                temperature -= args.temperature_lr
+                for name, param in model.named_parameters():
+                    if not args.scale_biases:
+                        if 'weight' in name:
+                            param /= temperature
+                        else:
+                            continue
+                    else:
+                        param /= temperature     
+
             if args.cuda:
                 losses.append(batch_loss)
                 preds.extend(batch_preds.cpu().detach().numpy())
@@ -65,7 +76,7 @@ def epoch_pass(data_loader, model, optimizer, crit, mode, args):
                 probs.extend(batch_probs.detach().numpy())
                 golds.extend(batch_golds.detach().numpy())
 
-            # i+=1
+            i+=1
             tqdm_bar.update()
             # if i > args.num_batches_per_epoch:
             #     data_iter.__del__()
