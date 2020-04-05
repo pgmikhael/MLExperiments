@@ -115,9 +115,11 @@ class AlexNet_Norm(nn.Module):
         )
 
     def forward(self, x):
-        for m in self.modules():
-            if isinstance(m, Suppressive_Norm):
-                torch.clamp_min_(m.supp_conv.weight, 0)
+        if self.clip_supp_weights:
+            for m in self.features.children():
+                if isinstance(m, Suppressive_Norm):
+                    m.supp_conv.weight.data.clamp_min_(0)
+                    m.supp_conv.bias.data.clamp_min_(0)
 
         x = self.features(x)
         x = self.avgpool(x)
@@ -128,24 +130,23 @@ class AlexNet_Norm(nn.Module):
 class Suppressive_Norm(nn.Module):
     def __init__(self, dim , alpha = 6, clip_supp_weights = False):
         super(Suppressive_Norm, self).__init__()
-        self.dim = dim
-        self.alpha = alpha
+        i,o,k,s,p = dim
         self.clip_supp_weights = clip_supp_weights
-        self.conv = lambda i,o,k,s,p: nn.Conv2d(i, o, kernel_size=k, stride=s, padding=p)
-        self.supp_conv = lambda i,o,k,s,p: nn.Conv2d(i, o, kernel_size=k, stride=s, padding=p)
-    
+        self.conv = nn.Conv2d(i, o, kernel_size=k, stride=s, padding=p)
+        self.supp_conv = nn.Conv2d(i, o, kernel_size=k+alpha, stride=s, padding=p + alpha//2)
+
     def forward(self, x):
         """
         inc of kernel size by alpha ==> increase of padding by alpha/2 to maintain size
         """
 
-        i,o,k,s,p = self.dim
+        #i,o,k,s,p = self.dim
         if self.clip_supp_weights:
-            x_supp = self.conv(i,o,k+self.alpha,s,p + self.alpha//2)(x**2)
-            x = self.conv(i,o,k,s,p)(x)
+            x_supp = self.supp_conv(x**2)
+            x = self.conv(x)
             x = x/(1+torch.sqrt(x_supp))
         else:
-            x_supp = self.conv(i,o,k+self.alpha,s,p + self.alpha//2)(x)
-            x = self.conv(i,o,k,s,p)(x)
+            x_supp = self.supp_conv(x)
+            x = self.conv(x)
             x = x/(1+x_supp)
         return x
