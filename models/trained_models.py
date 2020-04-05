@@ -23,7 +23,7 @@ class AlexNet(nn.Module):
     def __init__(self, args):
         super(AlexNet, self).__init__()
         self._model = models.alexnet(pretrained=args.trained_on_imagenet)
-        self._model.classifier = nn.Linear(self._model.classifier.in_features, args.num_classes)
+        self._model.classifier[-1] = nn.Linear(self._model.classifier[-1].in_features, args.num_classes)
 
     def forward(self, x, batch=None):
         return self._model(x)
