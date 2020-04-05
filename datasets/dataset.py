@@ -10,7 +10,7 @@ from copy import copy
 from datasets.abstract_dataset import Abstract_Dataset
 from helpers.classes import Ddict
 
-METADATA_FILENAMES = {"prediction": "jsonfile.json"}
+METADATA_FILENAMES = {"prediction": "dataset.json"}
 
 @RegisterDataset("dataset")
 class Dataset(Abstract_Dataset):
