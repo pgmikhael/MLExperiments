@@ -39,7 +39,6 @@ class Vanilla_AlexNet(nn.Module):
         x = torch.flatten(x, 1)
         x = self.classifier(x)
         return x
-<<<<<<< HEAD
 
 
 @RegisterModel("bn_alexnet")
