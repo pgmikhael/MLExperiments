@@ -23,6 +23,7 @@ def parse_args():
      # Model
      parser.add_argument('--model_name', type = str, default = 'vgg', help = 'Name of DNN')
      parser.add_argument('--trained_on_imagenet', action='store_true', default = False, help = 'torchvision weights from imagenet trained models')
+     parser.add_argument('--clip_supp_weights', action='store_true', default = False, help = 'clip weights of suppressive field to nonegative range')
 
      # Transformers
      parser.add_argument('--train_img_transformers', nargs='*', default=['scale_2d'], help='List of image-transformations to use [default: ["scale_2d"]] \
