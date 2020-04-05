@@ -8,6 +8,7 @@ class Resnet18(nn.Module):
     def __init__(self, args):
         super(Resnet18, self).__init__()
         self._model = models.resnet18(pretrained= args.trained_on_imagenet)
+        self._model.fc = nn.Linear(self._model.fc.in_features, args.num_classes)
 
     def forward(self, x, batch=None):
         return self._model(x)
@@ -22,6 +23,7 @@ class AlexNet(nn.Module):
     def __init__(self, args):
         super(AlexNet, self).__init__()
         self._model = models.alexnet(pretrained=args.trained_on_imagenet)
+        self._model.classifier = nn.Linear(self._model.classifier.in_features, args.num_classes)
 
     def forward(self, x, batch=None):
         return self._model(x)
@@ -31,8 +33,8 @@ class VGG16(nn.Module):
     def __init__(self, args):
         super(VGG16, self).__init__()
         self._model = models.vgg16(pretrained=args.trained_on_imagenet)
-        first_layer_output, _ = self._model.classifier[0].weight.shape 
-        _, final_layer_input = self._model.classifier[-1].weight.shape 
+        first_layer_output, _ = self._model.classifier[0].out_features 
+        _, final_layer_input = self._model.classifier[-1].in_features
 
         self._model.classifier[0] = nn.Linear(args.rolled_size, first_layer_output)
         self._model.classifier[-1] = nn.Linear(final_layer_input, args.num_classes)
