@@ -1,6 +1,6 @@
 from os.path import dirname, realpath, join
 import sys
-sys.path.append((dirname(realpath(__file__))))
+sys.path.append((dirname(dirname(realpath(__file__)))))
 from datasets.dataset_factory import get_dataset
 from models.model_factory import get_model, load_model, get_rolled_out_size
 from learning.learn import train_model, eval_model
