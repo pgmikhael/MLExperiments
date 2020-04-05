@@ -119,27 +119,6 @@ def get_optimizer(model, args):
 def get_rolled_out_size(args):
     h, w = args.img_size
     dummy_input = torch.ones(1, 3, h, w)
-    """
-    args.rolled_size = 10
-    dummy_args = copy(args)
-    if 'resnet18' in args.model_name:
-        dummy_args.model_name = 'resnet18'
-
-    model = model.module if isinstance(model, nn.DataParallel) else model
-    if args.cuda:
-        dummy_input = dummy_input.to(args.device)
-    
-    name, _ = list(model._model.named_children())[-1]
-
-    if name == 'fc':
-        model._model.fc = torch.nn.Identity() 
-    elif name == 'classifier':
-        model._model.classifier = torch.nn.Identity() 
-    elif args.model_name == 'inception_v3':
-        model._model.AuxLogits.fc = torch.nn.Identity()
-        model._model.fc = torch.nn.Identity()
-    dummy_output = model(dummy_input)
-    """
     model = get_model(args)[0]
     dummy_output = model.forward_thru_convs(dummy_input)
     return dummy_output.shape[-1]
