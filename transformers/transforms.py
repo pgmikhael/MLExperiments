@@ -71,11 +71,12 @@ class ComposeTrans(object):
         for name, kwargs in self.parse_transformers(self.tnsr_transformers):
             if name == 'force_num_chan':
                 transforms.append(Force_Num_Chan_Tensor_2d(self.args))
-        
-        if not self.args.computing_stats:
-            mean = self.args.img_mean
-            std = self.args.img_std
-            transforms.append(torchvision.transforms.Normalize(mean, std, inplace=False))
+            
+            if name == 'normalize':
+                if not self.args.computing_stats:
+                    mean = self.args.img_mean
+                    std = self.args.img_std
+                    transforms.append(torchvision.transforms.Normalize(mean, std, inplace=False))
 
         return transforms
 
