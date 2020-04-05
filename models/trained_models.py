@@ -12,18 +12,24 @@ class Resnet18(nn.Module):
 
     def forward(self, x, batch=None):
         return self._model(x)
+    
+    def forward_thru_convs(self, x, batch = None):
+        dummy_model = self._model
+        dummy_model.fc = torch.nn.Identity() 
+        return dummy_model(x)
 
 @RegisterModel('alexnet')
 class AlexNet(nn.Module):
     def __init__(self, args):
         super(AlexNet, self).__init__()
         self._model = models.alexnet(pretrained=args.trained_on_imagenet)
-
+        """
         first_layer_output, _ = self._model.classifier[1].weight.shape 
         _, final_layer_input = self._model.classifier[-1].weight.shape 
 
         self._model.classifier[1] = nn.Linear(args.rolled_size, first_layer_output)
         self._model.classifier[-1] = nn.Linear(final_layer_input, args.num_classes)
+        """
 
     def forward(self, x, batch=None):
         return self._model(x)

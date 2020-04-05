@@ -117,15 +117,13 @@ def get_optimizer(model, args):
 
 
 def get_rolled_out_size(args):
-    # TODO: make method for models
     h, w = args.img_size
     dummy_input = torch.ones(1, 3, h, w)
+    """
     args.rolled_size = 10
+    dummy_args = copy(args)
     if 'resnet18' in args.model_name:
-        dummy_args = copy(args)
         dummy_args.model_name = 'resnet18'
-    model = get_model(dummy_args)[0]
-    
 
     model = model.module if isinstance(model, nn.DataParallel) else model
     if args.cuda:
@@ -141,4 +139,7 @@ def get_rolled_out_size(args):
         model._model.AuxLogits.fc = torch.nn.Identity()
         model._model.fc = torch.nn.Identity()
     dummy_output = model(dummy_input)
+    """
+    model = get_model(args)[0]
+    dummy_output = model.forward_thru_convs(dummy_input)
     return dummy_output.shape[-1]

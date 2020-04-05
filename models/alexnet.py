@@ -4,7 +4,7 @@ from models.model_factory import RegisterModel
 
 @RegisterModel("vanilla_alexnet")
 class Vanilla_AlexNet(nn.Module):
-    def __init__(self, num_classes=1000):
+    def __init__(self, args):
         super(Vanilla_AlexNet, self).__init__()
         self.features = nn.Sequential(
             nn.Conv2d(3, 64, kernel_size=11, stride=4, padding=2),
@@ -29,7 +29,7 @@ class Vanilla_AlexNet(nn.Module):
             nn.Dropout(),
             nn.Linear(4096, 4096),
             nn.ReLU(inplace=True),
-            nn.Linear(4096, num_classes),
+            nn.Linear(4096, args.num_classes),
         )
 
     def forward(self, x):
@@ -38,3 +38,10 @@ class Vanilla_AlexNet(nn.Module):
         x = torch.flatten(x, 1)
         x = self.classifier(x)
         return x
+    
+    def forward_thru_convs(self, x, batch = None):
+        x = self.features(x)
+        x = self.avgpool(x)
+        return torch.flatten(x, 1)
+
+

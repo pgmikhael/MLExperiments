@@ -23,21 +23,26 @@ class Dataset(Abstract_Dataset):
         """
         dataset = []
         for user_row in tqdm(self.metadata_json):
-            user_id, split, inputs = user_row['user_id'], user_row['split'], user_row['input']
+            user_id, split, posts = user_row['user_id'], user_row['split'], user_row['posts']
 
             if not split == split_group:
                 continue
 
-            for i, input in enumerate(inputs):
+            for i, post in enumerate(posts):
+                if post['is_video']:
+                    continue
 
-                y = self.get_label(input, self.args.task) 
+                y = self.get_label(post, self.args.task) 
 
-                for img in input['imgs']:
+                for img in post['imgs']:
                     if img is not None and os.path.exists(os.path.join(self.args.img_dir, img)):
                         dataset.append({
                             'user_id': user_id,
+                            'post_id': post['post_id'],
                             'path': img,
                             'y': y,
+                            'tags': post['tags'],
+                            'followers':user_row['followers']
                         })
 
         return dataset

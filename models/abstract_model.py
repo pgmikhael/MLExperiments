@@ -15,6 +15,10 @@ class Abstract_Model(nn.Module):
         pass
 
     @abstractmethod
+    def forward_thru_convs(self, x, batch=None):
+        pass
+
+    @abstractmethod
     def _initialize_weights(self):
         pass
 
