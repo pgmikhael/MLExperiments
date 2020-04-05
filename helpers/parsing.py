@@ -45,6 +45,10 @@ def parse_args():
      parser.add_argument('--img_mean', type=float, nargs='+', default=[0.4979, 0.4665, 0.4492], help='mean value of img pixels. Per channel. ')
      parser.add_argument('--img_std', type=float, nargs='+', default=[0.2853, 0.2678, 0.2685 ], help='std of img pixels. Per channel. ')
 
+     # Model Output Sizes
+     parser.add_argument('--forward_thru_convs', action='store_true', default = False, help = 'whether training model')
+     
+
      # Workers and GPUS
      parser.add_argument('--num_workers', type=int, default = 0, help='std of img pixels. Per channel. ')
     

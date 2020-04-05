@@ -1,6 +1,6 @@
 from os.path import dirname, realpath, join
 import sys
-sys.path.append((dirname(realpath(__file__))))
+sys.path.append((dirname(dirname(realpath(__file__)))))
 from datasets.dataset_factory import get_dataset
 from models.model_factory import get_model, load_model, get_rolled_out_size
 from learning.learn import train_model, eval_model
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     
     repo = git.Repo(search_parent_directories=True)
     commit  = repo.head.object
-    print("\nIG Predictor main running by author: {} \ndate:{}, \nfrom commit: {} -- {}".format(
+    print("\nML Experiments main running by author: {} \ndate:{}, \nfrom commit: {} -- {}".format(
         commit.author, time.strftime(DATE_FORMAT_STR, time.localtime(commit.committed_date)),
         commit.hexsha, commit.message))
 
@@ -53,8 +53,9 @@ if __name__ == '__main__':
         print("\nLoading test data...")
         test_data = get_dataset(args, args.test_img_transformers, args.test_tnsr_transformers, 'test')
     
-    # Get model output dimensions, before classification
-    args.rolled_size = get_rolled_out_size(args)
+    if args.forward_thru_convs:
+        # Get model output dimensions, before classification
+        args.rolled_size = get_rolled_out_size(args)
 
     # Load model
     model, optimizer = get_model(args)
