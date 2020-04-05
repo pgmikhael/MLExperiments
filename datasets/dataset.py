@@ -40,7 +40,7 @@ class Dataset(Abstract_Dataset):
                             'user_id': user_id,
                             'post_id': post['post_id'],
                             'path': img,
-                            'y': y,
+                            'y': post['like_count'],
                             'tags': post['tags'],
                             'followers':user_row['followers']
                         })
