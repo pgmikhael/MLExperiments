@@ -39,8 +39,6 @@ def epoch_pass(data_loader, model, optimizer, crit, mode, args):
     with tqdm(data_loader, total = len(data_loader), ncols = 60) as tqdm_bar:#total=args.num_batches_per_epoch)
         for batch in data_loader:
             x, y, batch = prepare_batch(batch, args)
-            
-            args.num_followers = batch['followers']
 
             if batch is None:
                 warnings.warn('Empty batch')
@@ -59,11 +57,11 @@ def epoch_pass(data_loader, model, optimizer, crit, mode, args):
                 for name, param in model.named_parameters():
                     if not args.scale_biases:
                         if 'weight' in name:
-                            param /= temperature
+                            param.data /= temperature
                         else:
                             continue
                     else:
-                        param /= temperature     
+                        param.data /= temperature     
 
             if args.cuda:
                 losses.append(batch_loss)
