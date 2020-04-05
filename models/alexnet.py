@@ -2,18 +2,11 @@ import torch
 import torch.nn as nn
 from models.model_factory import RegisterModel
 
-<<<<<<< HEAD
 
-@RegisterModel("vanilla_alexnet")
-class AlexNet(nn.Module):
-    def __init__(self, args):
-        super(AlexNet, self).__init__()
-=======
 @RegisterModel("vanilla_alexnet")
 class Vanilla_AlexNet(nn.Module):
     def __init__(self, num_classes=1000):
         super(Vanilla_AlexNet, self).__init__()
->>>>>>> 348851778bfd433380a114b4645bd0be16077803
         self.features = nn.Sequential(
             nn.Conv2d(3, 64, kernel_size=11, stride=4, padding=2),
             nn.ReLU(inplace=True),
