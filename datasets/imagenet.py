@@ -18,17 +18,13 @@ class Imagenet(Abstract_Dataset):
     def create_dataset(self, split_group):
         self.split_group = split_group
         if self.split_group == 'train':
-            self.dataset = datasets.ImageNet('imagenet',
-                                          train=True,
-                                          download=True)
+            self.dataset = datasets.ImageNet('imagenet', train=True, download=True)
         else:
-            imagenet_test = datasets.ImageNet('imagenet',
-                                        train=False,
-                                        download=True)
+            imagenet_test = datasets.ImageNet('imagenet', train=False, download=True)
             if self.split_group == 'dev':
                 self.dataset = [imagenet_test[i] for i in range(len(imagenet_test) // 2)]
             elif self.split_group == 'test':
-                self.dataset = [mnist_timagenet_testest[i] for i in range(len(imagenet_test) // 2, len(imagenet_test))]
+                self.dataset = [imagenet_test[i] for i in range(len(imagenet_test) // 2, len(imagenet_test))]
             else:
                 raise Exception('Split group must be in ["train"|"dev"|"test"].')
 
