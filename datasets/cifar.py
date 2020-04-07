@@ -27,22 +27,24 @@ class Cifar10(object):
         self.split_group = split_group
         self.args = args
         self.image_loader = image_loader(img_transformers, tnsr_transformers, args)
+        self.dataset = self.create_dataset(split_group)
  
     
     def create_dataset(self, split_group):
-        self.split_group = split_group
-        if self.split_group == 'train':
-
-            self.dataset = datasets.CIFAR10('cifar10', train=True, download=True)
+        
+        if split_group == 'train':
+            dataset = datasets.CIFAR10('cifar10', train=True, download=True)
 
         else:
             cifar10_test = datasets.CIFAR10('cifar10', train=False, download=True)
-            if self.split_group == 'dev':
-                self.dataset = [cifar10_test[i] for i in range(len(cifar10_test) // 2)]
-            elif self.split_group == 'test':
-                self.dataset = [cifar10_test[i] for i in range(len(cifar10_test) // 2, len(cifar10_test))]
+            if split_group == 'dev':
+                dataset = [cifar10_test[i] for i in range(len(cifar10_test) // 2)]
+            elif split_group == 'test':
+                dataset = [cifar10_test[i] for i in range(len(cifar10_test) // 2, len(cifar10_test))]
             else:
                 raise Exception('Split group must be in ["train"|"dev"|"test"].')
+        
+        return dataset
 
     @staticmethod
     def set_args(args):
