@@ -9,11 +9,25 @@ import time
 import os
 from copy import copy
 from datasets.abstract_dataset import Abstract_Dataset
-
+from transformers.image import image_loader
 
 @RegisterDataset("cifar10")
-class Cifar10(Abstract_Dataset):
+class Cifar10(object):
     """A pytorch Dataset for the ImageNet data."""
+    def __init__(self, args, img_transformers, tnsr_transformers, split_group):
+        '''
+        params: args - config.
+        params: transformer - A transformer object, takes in a PIL image, performs some transforms and returns a Tensor
+        params: split_group - ['train'|'dev'|'test'].
+
+        constructs: standard pytorch Dataset obj, which can be fed in a DataLoader for batching
+        '''
+        super(Cifar10, self).__init__()
+
+        self.split_group = split_group
+        self.args = args
+        self.image_loader = image_loader(img_transformers, tnsr_transformers, args)
+ 
     
     def create_dataset(self, split_group):
         self.split_group = split_group
