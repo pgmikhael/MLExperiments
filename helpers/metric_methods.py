@@ -25,9 +25,9 @@ def compute_eval_metrics(golds, preds, probs, loss, args, stats_dict, mode):
 
 def classification_metrics(golds, preds, probs, loss, args, stats_dict, mode):
     accuracy = sklearn.metrics.accuracy_score(y_true=golds, y_pred=preds)
-    precision = sklearn.metrics.precision_score(y_true=golds, y_pred=preds)
-    recall = sklearn.metrics.recall_score(y_true=golds, y_pred=preds)
-    f1 = sklearn.metrics.f1_score(y_true=golds, y_pred=preds)
+    precision = sklearn.metrics.precision_score(y_true=golds, y_pred=preds, average ='macro')
+    recall = sklearn.metrics.recall_score(y_true=golds, y_pred=preds, average ='macro')
+    f1 = sklearn.metrics.f1_score(y_true=golds, y_pred=preds, average ='macro')
     confusion_matrix = sklearn.metrics.confusion_matrix(golds, preds) 
     try:
         auc = sklearn.metrics.roc_auc_score(golds, probs, average='samples')
