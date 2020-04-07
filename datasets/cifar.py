@@ -33,14 +33,15 @@ class Cifar10(object):
     def create_dataset(self, split_group):
         
         if split_group == 'train':
-            dataset = datasets.CIFAR10('cifar10', train=True, download=True)
+            dataset = datasets.CIFAR10('/dev/shm/cifar10', train=True, download=True)
 
         else:
-            cifar10_test = datasets.CIFAR10('cifar10', train=False, download=True)
+            cifar10_test = datasets.CIFAR10('/dev/shm/cifar10', train=False, download=True)
             if split_group == 'dev':
                 dataset = [cifar10_test[i] for i in range(len(cifar10_test) // 2)]
             elif split_group == 'test':
                 dataset = [cifar10_test[i] for i in range(len(cifar10_test) // 2, len(cifar10_test))]
+
             else:
                 raise Exception('Split group must be in ["train"|"dev"|"test"].')
         
@@ -63,6 +64,10 @@ class Cifar10(object):
         }
 
         return item
+
+    @property
+    def METADATA_FILENAME(self):
+        return 'cifar10'
 
 @RegisterDataset("cifar100")
 class Cifar100(Abstract_Dataset):
