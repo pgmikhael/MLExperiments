@@ -115,7 +115,7 @@ def train_model(train_data, dev_data, model, optimizer, args):
         DEVICE = torch.device("cuda")
         model.to(DEVICE)
 
-    for epoch in range(start_epoch, args.num_epochs + 1):
+    for epoch in range(start_epoch, args.num_epochs):
         if (epoch+1)%args.burn_in == 0:
             print("-------------\nEpoch {}:\n".format(epoch+1))
         for mode, data_loader in [('train', train_data_loader), ('dev', dev_data_loader)]:
