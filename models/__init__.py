@@ -1,4 +1,5 @@
 from models.trained_models import Resnet18
+from models.trained_models import Resnet34
 from models.trained_models import AlexNet
 from models.trained_models import VGG16
 from models.trained_models import DenseNet161

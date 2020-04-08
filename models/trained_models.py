@@ -18,6 +18,16 @@ class Resnet18(nn.Module):
         dummy_model.fc = torch.nn.Identity() 
         return dummy_model(x)
 
+@RegisterModel('resnet34')
+class Resnet34(nn.Module):
+    def __init__(self, args):
+        super(Resnet34, self).__init__()
+        self._model = models.resnet34(pretrained= args.trained_on_imagenet)
+        self._model.fc = nn.Linear(self._model.fc.in_features, args.num_classes)
+
+    def forward(self, x, batch=None):
+        return self._model(x)
+
 @RegisterModel('alexnet')
 class AlexNet(nn.Module):
     def __init__(self, args):
