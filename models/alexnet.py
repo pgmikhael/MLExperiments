@@ -24,10 +24,10 @@ class Vanilla_AlexNet(nn.Module):
         )
         self.avgpool = nn.AdaptiveAvgPool2d((6, 6))
         self.classifier = nn.Sequential(
-            nn.Dropout(),
+            nn.Dropout(p = args.dropout),
             nn.Linear(256 * 6 * 6, 4096),
             nn.ReLU(inplace=True),
-            nn.Dropout(),
+            nn.Dropout(p = args.dropout),
             nn.Linear(4096, 4096),
             nn.ReLU(inplace=True),
             nn.Linear(4096, args.num_classes),
@@ -67,10 +67,10 @@ class BN_AlexNet(nn.Module):
         )
         self.avgpool = nn.AdaptiveAvgPool2d((6, 6))
         self.classifier = nn.Sequential(
-            nn.Dropout(),
+            nn.Dropout(p = args.dropout),
             nn.Linear(256 * 6 * 6, 4096),
             nn.ReLU(inplace=True),
-            nn.Dropout(),
+            nn.Dropout(p = args.dropout),
             nn.Linear(4096, 4096),
             nn.ReLU(inplace=True),
             nn.Linear(4096, args.num_classes),
@@ -105,10 +105,10 @@ class AlexNet_Norm(nn.Module):
         )
         self.avgpool = nn.AdaptiveAvgPool2d((6, 6))
         self.classifier = nn.Sequential(
-            nn.Dropout(),
+            nn.Dropout(p = args.dropout),
             nn.Linear(256 * 6 * 6, 4096),
             nn.ReLU(inplace=True),
-            nn.Dropout(),
+            nn.Dropout(p = args.dropout),
             nn.Linear(4096, 4096),
             nn.ReLU(inplace=True),
             nn.Linear(4096, args.num_classes),
