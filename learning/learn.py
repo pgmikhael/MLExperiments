@@ -52,7 +52,7 @@ def epoch_pass(data_loader, model, optimizer, crit, mode, args):
             
             loss, batch_preds, batch_probs, batch_golds = run_model(x.float(), y, batch, model, optimizer, crit, mode, args)
 
-            batch_loss += loss.cpu().data.item()
+            batch_loss = loss.cpu().data.item()
 
             if mode == 'train':
                 loss.backward()       
