@@ -31,11 +31,11 @@ class MNIST(object):
     def create_dataset(self, split_group):
         
         if split_group == 'train':
-            dataset = datasets.MNIST('mnist',
+            dataset = datasets.MNIST('/dev/shm/mnist',
                                           train=True,
                                           download=True)
         else:
-            mnist_test = datasets.MNIST('mnist',
+            mnist_test = datasets.MNIST('/dev/shm/mnist',
                                         train=False,
                                         download=True)
             if split_group == 'dev':
