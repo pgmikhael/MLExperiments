@@ -11,7 +11,7 @@
         "weight_decay": [0],
         "burn_in": [10],
         "tuning_metric": ["dev_loss"],
-        "dataset": ["cifar10"],
+        "dataset": ["mnist"],
         "patience": [10],
         "task": ["likes"],
         "model_name": ["vanilla_alexnet", "bn_alexnet"],
