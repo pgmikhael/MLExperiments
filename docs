@@ -12,6 +12,7 @@
 - 'sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"'
 
 ## Dispatcher
+'python dispatcher.py --config_path  ../configs/configuration.json --log_dir /home/ec2-user/exp_models_results/exp_grid_search/  --result_path /home/ec2-user/exp_models_results/grid_search.csv'
 'python -m pdb dispatcher.py  --config_path  --log_dir  --result_path' 
 
 ## Main
