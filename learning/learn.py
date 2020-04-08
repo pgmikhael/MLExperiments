@@ -45,8 +45,6 @@ def epoch_pass(data_loader, model, optimizer, crit, mode, args):
     with tqdm(data_loader, total = len(data_loader), ncols = 60) as tqdm_bar:#total=args.num_batches_per_epoch)
         for batch in data_loader:
             x, y, batch = prepare_batch(batch, args)
-            
-            args.num_followers = batch['followers']
 
             if batch is None:
                 warnings.warn('Empty batch')
@@ -54,7 +52,7 @@ def epoch_pass(data_loader, model, optimizer, crit, mode, args):
             
             loss, batch_preds, batch_probs, batch_golds = run_model(x.float(), y, batch, model, optimizer, crit, mode, args)
 
-            batch_loss += loss.cpu().data.item()
+            batch_loss = loss.cpu().data.item()
 
             if mode == 'train':
                 loss.backward()       
