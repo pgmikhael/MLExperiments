@@ -93,62 +93,38 @@ def update_sumary_with_results(result_path, log_path, experiment_axies,  summary
         print("Experiment failed! Logs are located at: {}".format(log_path))
         return summary
 
-    result_dict['result_path'] = result_path
-    result_dict['log_path'] = log_path
-    result_dict['model_path'] = result_dict['train_stats']['model_path']
-    
-    # Get results from best epoch and move to top level of results dict
+    summary['result_path'].append(result_path)
+    summary['log_path'].append(log_path)
+    summary['model_path'].append(result_dict['train_stats']['model_path'])
+
     best_epoch_indx = result_dict['train_stats']['best_epoch'] if result_dict['train_stats'] else 0
-    present_result_keys = []
 
-    for k in result_keys:
-        if result_dict['train_stats'] and k in result_dict['train_stats'] and len(result_dict['train_stats'][k])>0:
-            present_result_keys.append(k)
-            if 'train' in k:
-                result_dict[k] = result_dict['train_stats'][k][best_epoch_indx]
-        
-        if 'test_stats' in result_dict and k in result_dict['test_stats'] and len(result_dict['test_stats'][k])>0:
-            present_result_keys.append(k)
-            if 'test' in k:
-                result_dict[k] = result_dict['test_stats'][k][-1]
+    for key in result_keys:
+        if args_dict['test_phase']:
+            for mode in ['test', 'dev']:
+                if (key in result_dict['{}_stats'.format(mode)]) and len(result_dict['{}_stats'.format(mode)][key])>0:
+                    summary[key].append(result_dict['{}_stats'.format(mode)][key][-1])
+        if args_dict['train_phase']:
+            if (key in result_dict['train_stats']) and (len(result_dict['train_stats'][key])>0):
+                if ('dev' in key) and (not args_dict['test_phase']):
+                        summary[key].append( result_dict['train_stats'][key][best_epoch_indx] )
+                if ('train' in key):
+                    summary[key].append( result_dict['train_stats'][key][best_epoch_indx] )
 
-        if 'dev_stats' in result_dict and k in result_dict['dev_stats'] and len(result_dict['dev_stats'][k])>0:
-            present_result_keys.append(k)
-            if 'dev' in k:
-                result_dict[k] = result_dict['dev_stats'][k][-1]
+    for key in experiment_axies:
+        if key in args_dict:
+            summary[key].append(args_dict[key])
         else:
-            if 'dev' in k:
-                result_dict[k] = result_dict['train_stats'][k][best_epoch_indx]
-
-    summary_columns = experiment_axies + present_result_keys + LOG_KEYS
-    for prev_summary in summary:
-        if len( set(prev_summary.keys()).union(set(summary_columns))) > len(summary_columns):
-            summary_columns = list( set(prev_summary.keys()).union(set(summary_columns)) )
-    # Only export keys we want to see in sheet to csv
-    summary_dict = {}
-    for key in summary_columns:
-        if key in result_dict:
-            summary_dict[key] = result_dict[key]
-        elif key in args_dict:
-            summary_dict[key] = args_dict[key]
-        else:
-            summary_dict[key] = 'NA'
-    summary.append(summary_dict)
-
-    if SORT_KEY in summary[0]:
-        summary = sorted(summary, key=lambda k: k[SORT_KEY])
-
-
+            summary[key].append('NA')
+    
     result_dir = os.path.dirname(args.result_path)
     if not os.path.isdir(result_dir):
         os.makedirs(result_dir)
 
-    # Write summary to csv
-    with open(args.result_path, 'w') as out_file:
-        writer = csv.DictWriter(out_file, fieldnames=summary_columns)
-        writer.writeheader()
-        for experiment in summary:
-            writer.writerow(experiment)
+    summary_csv = pd.DataFrame(summary)
+    if SORT_KEY in summary_csv.columns:
+        summary_csv.sort_values(SORT_KEY, axis = 0, ascending = False, inplace = True)
+    summary_csv.to_csv(args.result_path, index = False)
     return summary
 
 if __name__ == "__main__":
@@ -180,7 +156,7 @@ if __name__ == "__main__":
     for mode in ['train','dev','test']:
         result_keys.extend( [k.format(mode) for k in RESULT_KEY_STEMS ])
 
-    summary = []
+    summary = defaultdict(list)
     for i in range(len(experiments)):
         result_path, log_path = done_queue.get() #.rslt and .txt (stderr/out) files
         summary = update_sumary_with_results(result_path, log_path, experiment_axies, summary)
