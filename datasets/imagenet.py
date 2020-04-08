@@ -32,9 +32,9 @@ class Imagenet(object):
     def create_dataset(self, split_group):
         
         if split_group == 'train':
-            dataset = datasets.ImageNet('imagenet', train=True, download=True)
+            dataset = datasets.ImageNet('/dev/shm/imagenet', train=True, download=True)
         else:
-            imagenet_test = datasets.ImageNet('imagenet', train=False, download=True)
+            imagenet_test = datasets.ImageNet('/dev/shm/imagenet', train=False, download=True)
             if split_group == 'dev':
                 dataset = [imagenet_test[i] for i in range(len(imagenet_test) // 2)]
             elif split_group == 'test':
