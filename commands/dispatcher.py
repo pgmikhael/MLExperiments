@@ -12,6 +12,8 @@ import random
 import helpers.parsing as parsing
 import hashlib
 from helpers.reporting_methods import yagmail_results, email_results
+from collections import defaultdict
+import pandas as pd
 
 EXPERIMENT_CRASH_MSG = "ALERT! job:[{}] has crashed! Check logfile at:[{}]"
 CONFIG_NOT_FOUND_MSG = "ALERT! {} config {} file does not exist!"
@@ -80,7 +82,7 @@ def worker(gpu, job_queue, done_queue):
         if params is None:
             return
         done_queue.put(launch_experiment(gpu, params))
-
+        
 def update_sumary_with_results(result_path, log_path, experiment_axies,  summary):
     assert result_path is not None
     try:
