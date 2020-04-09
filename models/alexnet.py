@@ -89,10 +89,10 @@ class AlexNet_Norm(nn.Module):
         super(AlexNet_Norm, self).__init__()
         self.clip_supp_weights = args.clip_supp_weights
         self.features = nn.Sequential(
-            Suppressive_Norm((3,64,11,4,2), clip_supp_weights= self.clip_supp_weights),
+            Suppressive_Norm((3,64,11,4,2), alpha = 22, clip_supp_weights= self.clip_supp_weights),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2),
-            Suppressive_Norm((64,192,5,1,2), clip_supp_weights= self.clip_supp_weights),
+            Suppressive_Norm((64,192,5,1,2), alpha = 10, clip_supp_weights= self.clip_supp_weights),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2),
             Suppressive_Norm((192,384,3,1,1), clip_supp_weights= self.clip_supp_weights),
@@ -134,6 +134,8 @@ class Suppressive_Norm(nn.Module):
         self.clip_supp_weights = clip_supp_weights
         self.conv = nn.Conv2d(i, o, kernel_size=k, stride=s, padding=p)
         self.supp_conv = nn.Conv2d(i, o, kernel_size=k+alpha, stride=s, padding=p + alpha//2)
+        self.sigma = torch.nn.Parameter(torch.randn(1)*k*k)
+        self.sigma.requires_grad = True
 
     def forward(self, x):
         """
@@ -144,9 +146,9 @@ class Suppressive_Norm(nn.Module):
         if self.clip_supp_weights:
             x_supp = self.supp_conv(x**2)
             x = self.conv(x)
-            x = x/(1+torch.sqrt(x_supp))
+            x = x/(self.sigma+torch.sqrt(x_supp))
         else:
             x_supp = self.supp_conv(x)
             x = self.conv(x)
-            x = x/(1+x_supp)
+            x = x/(self.sigma+x_supp)
         return x
