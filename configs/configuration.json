@@ -3,7 +3,7 @@
         "init_lr": [1e-01],
         "lr_decay": [0.1],
         "dropout": [0.3],
-        "num_epochs": [400],
+        "num_epochs": [100],
         "batch_size": [128],
         "optimizer": ["SGD"],
         "train_phase": [true],
