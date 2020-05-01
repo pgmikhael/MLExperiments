@@ -12,11 +12,18 @@ import pdb
 
 def run_model(x, y, batch, model, optimizer, crit, mode, args):     
     probs = model(x)
-    preds = (torch.sigmoid(probs) > 0.5)
-    loss = crit(probs, y.unsqueeze(1).float())    # compute loss
+    B, C = probs.shape
+    if C > 1:
+        loss = crit(probs, y)    # compute loss
+        preds = torch.softmax(probs, dim = -1)
+        probs, preds = torch.topk(preds, k = 1)
+        probs, preds = probs.view(B), preds.view(B)
+    else:
+        loss = crit(probs, y.unsqueeze(1).float())    # compute loss
+        preds = (torch.sigmoid(probs) > 0.5)
+
     if args.l1_decay > 0:
         loss += args.l1_decay*l1_regularization(model)
-
     return loss, preds, probs, y
 
 def epoch_pass(data_loader, model, optimizer, crit, mode, args):
@@ -46,7 +53,7 @@ def epoch_pass(data_loader, model, optimizer, crit, mode, args):
             
             loss, batch_preds, batch_probs, batch_golds = run_model(x.float(), y, batch, model, optimizer, crit, mode, args)
 
-            batch_loss += loss.cpu().data.item()
+            batch_loss = loss.cpu().data.item()
 
             if mode == 'train':
                 loss.backward()       
@@ -119,7 +126,7 @@ def train_model(train_data, dev_data, model, optimizer, args):
         DEVICE = torch.device("cuda")
         model.to(DEVICE)
 
-    for epoch in range(start_epoch, args.num_epochs + 1):
+    for epoch in range(start_epoch, args.num_epochs):
         if (epoch+1)%args.burn_in == 0:
             print("-------------\nEpoch {}:\n".format(epoch+1))
         for mode, data_loader in [('train', train_data_loader), ('dev', dev_data_loader)]:
