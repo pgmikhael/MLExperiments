@@ -20,7 +20,7 @@
         "train_tnsr_transformers": ["force_num_chan normalize"],
         "test_img_transformers": ["scale_2d"],
         "test_tnsr_transformers": ["force_num_chan normalize"],
-        "get_dataset_stats": [true],
+        "get_dataset_stats": [false],
         "img_size": ["224 224"],
 	"img_mean":["0.485 0.456 0.406"],
 	"img_std": ["0.229 0.224 0.225"],

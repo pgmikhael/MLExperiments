@@ -81,7 +81,7 @@ def epoch_pass(data_loader, model, optimizer, crit, mode, args):
                 probs.extend(batch_probs.detach().numpy())
                 golds.extend(batch_golds.detach().numpy())
 
-            i+=1
+            #i+=1
             tqdm_bar.update()
             # if i > args.num_batches_per_epoch:
             #     data_iter.__del__()
