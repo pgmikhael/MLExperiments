@@ -48,3 +48,7 @@ class MNIST_Dataset(Abstract_Dataset):
         }
 
         return item
+
+    @property
+    def METADATA_FILENAME(self):
+        return 'mnist'
