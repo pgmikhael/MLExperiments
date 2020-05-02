@@ -163,4 +163,4 @@ if __name__ == "__main__":
         dump_result_string = SUCESSFUL_SEARCH_STR.format(args.result_path)
         print("({}/{}) \t {}".format(i+1, len(experiments), dump_result_string))
     
-    email_results(args.result_path)
+    yagmail_results(args.result_path)
