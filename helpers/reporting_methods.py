@@ -6,10 +6,10 @@ from email.mime.base import MIMEBase
 from email import encoders
 import os.path
 
-def yagmail_results(path):
-    yag = yagmail.SMTP('pgmikhael.development', 'Xl#0JpYOVc')
+def yagmail_results(path, oauth2_path):
+    yag = yagmail.SMTP('pgmikhael.development', oauth2_file = oauth2_path)
     contents = ["Experiment Results"]
-    yag.send('pgmikhael@gmail.com', 'NAB Exp - Results', contents, attachments= path)
+    yag.send('pgmikhael@gmail.com', 'Experiment Results', contents, attachments= path)
 
 def email_results(path):
 

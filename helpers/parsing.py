@@ -10,7 +10,8 @@ POSS_VAL_NOT_LIST = 'Flag {} has an invalid list of values: {}. Length of list m
 
 
 def parse_args():
-     parser = argparse.ArgumentParser(description='IG Predictor')
+     parser = argparse.ArgumentParser(description='MLPIPE')
+     parser.add_argument('--oauth2_path', type = str, default = 'secrets/oauth_cred.json')
 
      # Dataset
      ## Development
