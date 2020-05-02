@@ -7,7 +7,7 @@ from email import encoders
 import os.path
 
 def yagmail_results(path):
-    yag = yagmail.SMTP('pgmikhael.development', 'Xl#0JpYOVc')
+    yag = yagmail.SMTP('pgmikhael.development', oauth2_file = '/home/ec2-user/MLExperiments/secrets/oauth_cred.json')
     contents = ["Experiment Results"]
     yag.send('pgmikhael@gmail.com', 'NAB Exp - Results', contents, attachments= path)
 
