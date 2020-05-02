@@ -86,7 +86,19 @@ def epoch_pass(data_loader, model, optimizer, crit, mode, args):
             # if i > args.num_batches_per_epoch:
             #     data_iter.__del__()
             #     break
-    
+    '''
+    if mode == 'train':
+        temperature -= args.temperature_lr
+        for name, param in model.named_parameters():
+            if not args.scale_biases:
+                if 'weight' in name:
+                    param.data /= temperature
+                else:
+                    continue
+            else:
+                param.data /= temperature
+    '''
+
     # format golds, preds, probs, avg_loss
     avg_loss = np.mean(np.array(losses))
     preds = np.array(preds)
