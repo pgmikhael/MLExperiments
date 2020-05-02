@@ -6,8 +6,9 @@ from email.mime.base import MIMEBase
 from email import encoders
 import os.path
 
-def yagmail_results(path, oauth2_path):
-    yag = yagmail.SMTP('pgmikhael.development', oauth2_file = oauth2_path)
+def yagmail_results(path):
+    yag = yagmail.SMTP('pgmikhael.development', oauth2_file = '/home/ec2-user/MLExperiments/secrets/oauth_cred.json')
+
     contents = ["Experiment Results"]
     yag.send('pgmikhael@gmail.com', 'Experiment Results', contents, attachments= path)
 
